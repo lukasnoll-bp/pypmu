@@ -232,7 +232,7 @@ class CommonFrame(metaclass=ABCMeta):
             self.set_soc(int(t))  # Get current timestamp
 
         if frasec:
-            if isinstance(frasec, collections.Sequence):
+            if isinstance(frasec, collections.abc.Sequence):
                 self.set_frasec(*frasec)
             else:
                 self.set_frasec(frasec)  # Just set fraction of second and use default values for other arguments.
@@ -2134,20 +2134,18 @@ class DataFrame(CommonFrame):
 
         return freq
 
-
     def _freq2int(freq, data_format):
 
         if isinstance(data_format, int):
             data_format = DataFrame._int2format(data_format)
 
         if data_format[3]:  # FREQ/DFREQ floating point
-            if not -32.767 <= freq <= 32.767:
-                raise ValueError("FREQ must be in range -32.767 <= FREQ <= 32.767.")
-
+            if abs(float(freq)) > 2147483647.0:
+                raise ValueError("float FREQ must be packable into 32 bits. -2147483647 <= FREQ <= 2147483647.")
             freq = unpack("!I", pack("!f", float(freq)))[0]
         else:
             if not -32767 <= freq <= 32767:
-                raise ValueError("FREQ must be 16-bit signed integer. -32767 <= FREQ <= 32767.")
+                raise ValueError("integer FREQ must be packable into 16-bits. -32767 <= FREQ <= 32767.")
             freq = unpack("!H", pack("!h", freq))[0]
 
         return freq
