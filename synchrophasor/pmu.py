@@ -184,7 +184,7 @@ class Pmu(object):
         elif not self.cfg2.get_data_format()[2]:
             analog = map(lambda x: int(x / self.cfg2.get_analog_units()), analog)
 
-        data_frame = DataFrame(self.cfg2.get_id_code(), stat, phasors, freq, dfreq, analog, digital, self.cfg2)
+        data_frame = DataFrame(self.cfg2.get_id_code(), stat, phasors, freq, dfreq, analog, digital, self.cfg2, soc=soc, frasec=frasec)
 
         for buffer in self.client_buffers:
             buffer.put(data_frame)
