@@ -344,7 +344,7 @@ class Pmu(object):
                         if set_timestamp: data.set_time()
                         data = data.convert2bytes()
 
-                    sleep(delay)
+                    # sleep(delay)
                     connection.sendall(data)
                     logger.debug("[%d] - Message sent at [%f] -> (%s:%d)",
                                  pmu_id, time(), address[0], address[1])
